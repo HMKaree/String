@@ -27,7 +27,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int CHOOSE_IMAGE = 101;
 
@@ -56,21 +56,8 @@ public class UserProfileActivity extends AppCompatActivity {
         progressbar = findViewById(R.id.progressbar);
         SaveProfileBtn = findViewById(R.id.SaveProfileBtn);
 
-        UserImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImageChooser();
-
-            }
-        });
-
-        SaveProfileBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveUserInformation();
-
-            }
-        });
+        UserImage.setOnClickListener(this);
+        SaveProfileBtn.setOnClickListener(this);
 
     }
 
@@ -79,18 +66,18 @@ public class UserProfileActivity extends AppCompatActivity {
         String displayAge = UserAgeField.getText().toString();
         String displayJob = UserJobField.getText().toString();
 
-        if(displayName.isEmpty()) {
+        if (displayName.isEmpty()) {
             UserNameField.setError("User Name is required");
             UserNameField.requestFocus();
             return;
         }
-        if(displayAge.isEmpty()) {
+        if (displayAge.isEmpty()) {
             UserAgeField.setError("Age is required");
             UserAgeField.requestFocus();
             return;
         }
 
-        if(displayJob.isEmpty()) {
+        if (displayJob.isEmpty()) {
             UserJobField.setError("Job is required");
             UserJobField.requestFocus();
             return;
@@ -98,7 +85,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if(user != null && ProfileImageUrl != null){
+        if (user != null && ProfileImageUrl != null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
                     .setDisplayName(displayName)
                     .setPhotoUri(Uri.parse(ProfileImageUrl))
@@ -106,9 +93,9 @@ public class UserProfileActivity extends AppCompatActivity {
             //add displayAge nd displayJob
 
             user.updateProfile(profile)
-                    .addOnCompleteListener(new OnCompleteListener<Void>(){
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task){
+                        public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(UserProfileActivity.this, "Profile Updated",
                                         Toast.LENGTH_SHORT).show();
@@ -119,56 +106,68 @@ public class UserProfileActivity extends AppCompatActivity {
                     });
         }
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.UserImage:
+                showImageChooser();
+                break;
+
+            case R.id.SaveProfileBtn:
+                saveUserInformation();
+                startActivity(new Intent(UserProfileActivity.this, LogInActivity.class));
 
         }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null)
-        { UriProfileImage = data.getData();
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            UriProfileImage = data.getData();
 
-        try{
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), UriProfileImage);
-            UserImage.setImageBitmap(bitmap);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), UriProfileImage);
+                UserImage.setImageBitmap(bitmap);
 
-            uploadImageToFirebaseStorage();
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+                uploadImageToFirebaseStorage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void uploadImageToFirebaseStorage(){
+    private void uploadImageToFirebaseStorage() {
         StorageReference UserProfileImageRef =
-                FirebaseStorage.getInstance().getReference("profilepics/"+System.currentTimeMillis()
-        + ".jpg");
+                FirebaseStorage.getInstance().getReference("profilepics/" + System.currentTimeMillis()
+                        + ".jpg");
 
-        if(UriProfileImage != null){
+        if (UriProfileImage != null) {
             progressbar.setVisibility(View.VISIBLE);
             UserProfileImageRef.putFile(UriProfileImage)
-                    .addOnSuccessListener( new OnSuccessListener
-                    <UploadTask.TaskSnapshot>(){
+                    .addOnSuccessListener(new OnSuccessListener
+                            <UploadTask.TaskSnapshot>() {
 
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressbar.setVisibility(View.GONE);
-                    ProfileImageUrl = taskSnapshot.getDownloadUrl().toString();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener(){
-                @Override
-                public void onFailure(@NonNull Exception e){
-                    progressbar.setVisibility(View.GONE);
-                    Toast.makeText(UserProfileActivity.this, e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressbar.setVisibility(View.GONE);
+                            ProfileImageUrl = taskSnapshot.getDownloadUrl().toString();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressbar.setVisibility(View.GONE);
+                            Toast.makeText(UserProfileActivity.this, e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
 
-                }
-            });
+                        }
+                    });
 
-                }
+        }
 
     }
 
@@ -180,4 +179,6 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
 
+
 }
+

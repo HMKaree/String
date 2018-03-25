@@ -1,32 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.string.LogInActivity"
-    android:background="@color/colorPrimary">
+   android:orientation="vertical">
 
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <LinearLayout
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/untitled"
-        app:layout_constraintBottom_toTopOf="@+id/EmailEditor"
-        app:srcCompat="@drawable/string_logo" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:textColor="@color/colorText"
+            android:text="Welcome to String"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorText"
+            android:text="String is your companion that helps you buy good products
+and also contribute to building your favourite brands"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center" >
+
+            <Button
+                android:layout_margin="10dp"
+                android:textColor="@color/colorText"
+                android:background="@drawable/button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Learn More"/>
+
+            <Button
+                android:layout_margin="10dp"
+                android:textColor="@color/colorText"
+                android:background="@drawable/button_style2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Guide"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
 
     <EditText
         android:id="@+id/EmailEditor"
-        android:layout_width="274dp"
-        android:layout_height="45dp"
-        android:layout_above="@+id/PasswordEditor"
-        android:layout_alignStart="@+id/PasswordEditor"
-        android:layout_marginBottom="22dp"
-        android:background="@color/colorPrimary"
+        android:drawablePadding="10dp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_email"
         android:ems="10"
         android:hint="Email"
@@ -34,38 +77,42 @@
         android:text="" />
 
     <EditText
+        android:drawablePadding="10dp"
         android:id="@+id/PasswordEditor"
-        android:layout_width="274dp"
-        android:layout_height="45dp"
-        android:layout_above="@+id/LoginBtn"
-        android:layout_alignEnd="@+id/LoginBtn"
-        android:layout_marginBottom="62dp"
-        android:layout_marginEnd="11dp"
-        android:background="@color/colorPrimary"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_password"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:text="" />
 
+    <!--<TextView
+        android:id="@+id/VerifyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/LoginBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:text="Verify"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />-->
+
 
     <Button
         android:id="@+id/LoginBtn"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:layout_above="@+id/RegisterLink"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="21dp"
-        android:background="@color/colorAccent"
-        android:text="@string/login_label" />
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_style"
+        android:text="@string/login_label"
+        android:textColor="@color/colorText"
+        android:drawableEnd="@drawable/ic_action_name"/>
 
     <TextView
         android:id="@+id/RegisterLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="31dp"
+      android:layout_marginTop="10dp"
         android:text="@string/register_text"
         tools:text="Register Here" />
 
@@ -78,5 +125,8 @@
         android:layout_marginBottom="11dp"
         android:layout_marginTop="37dp"
         android:visibility="gone"/>
-</RelativeLayout>
+</LinearLayout>
+</LinearLayout>
+
+
 

@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     //TextView LoginLink;
     FirebaseAuth mAuth;
     ProgressBar progressBar2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +77,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         progressBar2.setVisibility(View.VISIBLE);
 
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+
                             progressBar2.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "User registered successfully",
-                                    Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegisterActivity.this, UserProfileActivity.class));
+                            /*Toast.makeText(getApplicationContext(), "User registered successfully",
+                                    Toast.LENGTH_SHORT).show();*/
                         }
                         else{
                             if(task.getException() instanceof FirebaseAuthUserCollisionException){
-                                Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT)
+                                        .show();
                             }
+
                             else {
                                 Toast.makeText(getApplicationContext(), "Some error occurred", Toast.LENGTH_SHORT).show();
                             }
@@ -96,14 +103,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
 
 
-    }
+
+        }
+
+
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.RegisterBtn:
                 RegisterUser();
-                startActivity(new Intent(this, UserProfileActivity.class));
                 break;
         }
 

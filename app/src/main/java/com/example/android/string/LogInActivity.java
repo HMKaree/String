@@ -16,13 +16,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     EditText EmailEditor;
     EditText PasswordEditor;
-    TextView RegisterLink;
+    TextView RegisterLink, VerifyTextView;
     Button LoginBtn;
     FirebaseAuth mAuth;
     ProgressBar progressBar2;
@@ -44,6 +45,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         RegisterLink = (TextView) findViewById(R.id.RegisterLink);
         LoginBtn = (Button) findViewById(R.id.LoginBtn);
         progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
+        //VerifyTextView = (TextView) findViewById(R.id.VerifyTextView);
 
         RegisterLink.setOnClickListener(this);
         LoginBtn.setOnClickListener(this);
@@ -80,15 +82,23 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
+        FirebaseUser user = mAuth.getCurrentUser();
+
         progressBar2.setVisibility(View.VISIBLE);
 
+       /* if(user.isEmailVerified()){
+            VerifyTextView.setText("Email Verified");
+        }
+        else {
+            VerifyTextView.setText("Email Not Verified");
+        }*/
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            finish();
+                            //finish();
 
                             progressBar2.setVisibility(View.GONE);
 
@@ -96,7 +106,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
 
-                            Toast.makeText(getApplicationContext(), "User registered successfully",
+                            Toast.makeText(getApplicationContext(), "User logged in successfully",
                                     Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -113,7 +123,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onStart();
 
         if(mAuth.getCurrentUser() != null){
-            finish();
             startActivity(new Intent(this, MainActivity.class));
         }
     }
@@ -122,7 +131,6 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.RegisterLink:
-                finish();
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
 
