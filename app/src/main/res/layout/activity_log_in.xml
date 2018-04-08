@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,19 +13,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="30dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimaryDark">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:textColor="@color/colorText"
+            android:textSize="30sp"
+            android:textColor="@color/colorPrimary"
             android:text="Welcome to String"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorPrimary"
             android:text="String is your companion that helps you buy good products
 and also contribute to building your favourite brands"
             android:textSize="15sp"
@@ -40,8 +39,9 @@ and also contribute to building your favourite brands"
             android:layout_gravity="center" >
 
             <Button
+                android:id="@+id/LearnMoreBtn"
                 android:layout_margin="10dp"
-                android:textColor="@color/colorText"
+                android:textColor="@color/colorPrimary"
                 android:background="@drawable/button_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,7 +49,7 @@ and also contribute to building your favourite brands"
 
             <Button
                 android:layout_margin="10dp"
-                android:textColor="@color/colorText"
+                android:textColor="@color/colorPrimary"
                 android:background="@drawable/button_style2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,8 +105,8 @@ and also contribute to building your favourite brands"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_style"
         android:text="@string/login_label"
-        android:textColor="@color/colorText"
-        android:drawableEnd="@drawable/ic_action_name"/>
+        android:textColor="@color/colorPrimary"
+        android:drawableEnd="@drawable/ic_send"/>
 
     <TextView
         android:id="@+id/RegisterLink"

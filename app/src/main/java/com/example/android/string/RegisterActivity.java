@@ -86,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                             progressBar2.setVisibility(View.GONE);
                             startActivity(new Intent(RegisterActivity.this, UserProfileActivity.class));
-                            /*Toast.makeText(getApplicationContext(), "User registered successfully",
+                            /*Toast.makeText(getApplicationContext(), "UserModel registered successfully",
                                     Toast.LENGTH_SHORT).show();*/
                         }
                         else{

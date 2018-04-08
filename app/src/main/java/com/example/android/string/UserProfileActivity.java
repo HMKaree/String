@@ -35,7 +35,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     EditText UserNameField, UserAgeField, UserJobField;
     Button SaveProfileBtn;
     Uri UriProfileImage;
-    ProgressBar progressbar;
+    //ProgressBar progressbar;
     String ProfileImageUrl;
 
     FirebaseAuth mAuth;
@@ -53,7 +53,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         UserAgeField = findViewById(R.id.UserAgeField);
         UserJobField = findViewById(R.id.UserJobField);
 
-        progressbar = findViewById(R.id.progressbar);
+        //progressbar = findViewById(R.id.progressbar);
         SaveProfileBtn = findViewById(R.id.SaveProfileBtn);
 
         UserImage.setOnClickListener(this);
@@ -67,7 +67,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         String displayJob = UserJobField.getText().toString();
 
         if (displayName.isEmpty()) {
-            UserNameField.setError("User Name is required");
+            UserNameField.setError("UserModel Name is required");
             UserNameField.requestFocus();
             return;
         }
@@ -146,21 +146,21 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         + ".jpg");
 
         if (UriProfileImage != null) {
-            progressbar.setVisibility(View.VISIBLE);
+            //progressbar.setVisibility(View.VISIBLE);
             UserProfileImageRef.putFile(UriProfileImage)
                     .addOnSuccessListener(new OnSuccessListener
                             <UploadTask.TaskSnapshot>() {
 
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressbar.setVisibility(View.GONE);
+                            //progressbar.setVisibility(View.GONE);
                             ProfileImageUrl = taskSnapshot.getDownloadUrl().toString();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressbar.setVisibility(View.GONE);
+                           // progressbar.setVisibility(View.GONE);
                             Toast.makeText(UserProfileActivity.this, e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
 

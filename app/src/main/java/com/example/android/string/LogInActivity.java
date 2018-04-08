@@ -27,6 +27,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     Button LoginBtn;
     FirebaseAuth mAuth;
     ProgressBar progressBar2;
+    Button LearnMoreBtn;
 
 
     @Override
@@ -46,9 +47,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         LoginBtn = (Button) findViewById(R.id.LoginBtn);
         progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
         //VerifyTextView = (TextView) findViewById(R.id.VerifyTextView);
+        LearnMoreBtn = findViewById(R.id.LearnMoreBtn);
 
         RegisterLink.setOnClickListener(this);
         LoginBtn.setOnClickListener(this);
+        LearnMoreBtn.setOnClickListener(this);
 
 
     }
@@ -86,7 +89,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
         progressBar2.setVisibility(View.VISIBLE);
 
-       /* if(user.isEmailVerified()){
+       /* if(userModel.isEmailVerified()){
             VerifyTextView.setText("Email Verified");
         }
         else {
@@ -106,7 +109,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
 
-                            Toast.makeText(getApplicationContext(), "User logged in successfully",
+                            Toast.makeText(getApplicationContext(), "UserModel logged in successfully",
                                     Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -136,6 +139,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
             case R.id.LoginBtn:
                 UserLogin();
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+
+            case R.id.LearnMoreBtn:
+                startActivity(new Intent(this, LearnMore.class));
                 break;
 
         }
