@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,17 +18,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LogInActivity extends AppCompatActivity implements View.OnClickListener{
 
 
-    EditText EmailEditor;
-    EditText PasswordEditor;
-    TextView RegisterLink, VerifyTextView;
-    Button LoginBtn;
-    FirebaseAuth mAuth;
-    ProgressBar progressBar2;
-    Button LearnMoreBtn;
+     private EditText EmailEditor;
+     private EditText PasswordEditor;
+     private TextView RegisterLink, forgotPasswordLink; //VerifyTextView;
+     private Button LoginBtn;
+     private FirebaseAuth mAuth;
+     private FirebaseUser user_id;
+     private FirebaseDatabase mdatabase;
+     private DatabaseReference StringDatabase;
+     FirebaseAuth.AuthStateListener mAuthListener;
+     //FirebaseUser user = mAuth.getInstance().getCurrentUser();
+     //ProgressBar progressBar2;
+     private Button LearnMoreBtn, UserGuide;
 
 
     @Override
@@ -37,98 +48,136 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
 
 
+        EmailEditor =  findViewById(R.id.EmailEditor);
+        PasswordEditor =  findViewById(R.id.PasswordEditor);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        EmailEditor = (EditText) findViewById(R.id.EmailEditor);
-        PasswordEditor = (EditText) findViewById(R.id.PasswordEditor);
-
-        RegisterLink = (TextView) findViewById(R.id.RegisterLink);
-        LoginBtn = (Button) findViewById(R.id.LoginBtn);
-        progressBar2 = (ProgressBar) findViewById(R.id.progressBar2);
-        //VerifyTextView = (TextView) findViewById(R.id.VerifyTextView);
+        RegisterLink =  findViewById(R.id.RegisterLink);
+        forgotPasswordLink = findViewById(R.id.forgotPasswordLink);
+        LoginBtn =  findViewById(R.id.LoginBtn);
+        //progressBar2 =  findViewById(R.id.progressBar2);
+        //VerifyTextView =  findViewById(R.id.VerifyTextView);
         LearnMoreBtn = findViewById(R.id.LearnMoreBtn);
+        UserGuide = findViewById(R.id.UserGuide);
+
 
         RegisterLink.setOnClickListener(this);
+        forgotPasswordLink.setOnClickListener(this);
         LoginBtn.setOnClickListener(this);
         LearnMoreBtn.setOnClickListener(this);
+        UserGuide.setOnClickListener(this);
 
+        mdatabase = FirebaseDatabase.getInstance();
+        StringDatabase = mdatabase.getReference().child("UserProfiles");
+
+
+       mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+              if (firebaseAuth.getCurrentUser() == null){
+                  Intent loginIntent = new Intent(LogInActivity.this, RegisterActivity.class);
+                  loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                  startActivity(loginIntent);
+                  finish();
+              }
+
+                if(firebaseAuth.getCurrentUser() != null){
+                    startActivity(new Intent(LogInActivity.this, MainActivity.class));
+                    finish();
+                }
+            }
+        };
 
     }
 
-    private void UserLogin()
-    {
-        String email= EmailEditor.getText().toString().trim();
-        String password= PasswordEditor.getText().toString().trim();
+   @Override
+    protected void onStart() {
+        super.onStart();
 
-        if (email.isEmpty()){
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    private void UserLogin() {
+        String email = EmailEditor.getText().toString().trim();
+        String password = PasswordEditor.getText().toString().trim();
+
+        if (email.isEmpty()) {
             EmailEditor.setError("Email is required");
             EmailEditor.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             EmailEditor.setError("Enter valid email address");
             EmailEditor.requestFocus();
             return;
         }
 
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             PasswordEditor.setError("Password is required");
             PasswordEditor.requestFocus();
             return;
         }
 
-        if(password.length()<6){
+        if (password.length() < 6) {
             PasswordEditor.setError("Minimum length of password is 6");
             PasswordEditor.requestFocus();
             return;
         }
 
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        progressBar2.setVisibility(View.VISIBLE);
+        //progressBar2.setVisibility(View.VISIBLE);
+        if ( email != null && password != null) {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
 
-       /* if(userModel.isEmailVerified()){
-            VerifyTextView.setText("Email Verified");
-        }
-        else {
-            VerifyTextView.setText("Email Not Verified");
-        }*/
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            //finish();
-
-                            progressBar2.setVisibility(View.GONE);
-
-                            Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-
-                            Toast.makeText(getApplicationContext(), "UserModel logged in successfully",
-                                    Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-
-                            Toast.makeText(getApplicationContext(), "Some error occurred", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if(mAuth.getCurrentUser() != null){
-            startActivity(new Intent(this, MainActivity.class));
+                    });
         }
     }
+
+    /*public void checkUserExists(){
+
+        final FirebaseUser user_id = mAuth.getCurrentUser();
+        StringDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(user_id)) {
+
+
+                    Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                    //finish();
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "Some error occurred", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }*/
+
+
+
+
+
+
+
+
 
     @Override
     public void onClick(View view) {
@@ -137,13 +186,21 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
 
+            case R.id.forgotPasswordLink:
+                startActivity(new Intent(this, ForgotPassword.class));
+                break;
+
             case R.id.LoginBtn:
                 UserLogin();
-                startActivity(new Intent(this, MainActivity.class));
+                //startActivity(new Intent(this, MainActivity.class));
                 break;
 
             case R.id.LearnMoreBtn:
                 startActivity(new Intent(this, LearnMore.class));
+                break;
+
+            case R.id.UserGuide:
+                startActivity(new Intent(this, UserGuide.class));
                 break;
 
         }

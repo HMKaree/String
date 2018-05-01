@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
 
         //sending query to database
         database = FirebaseDatabase.getInstance();
-        Brands = database.getReference().child("Brands");
+        Brands = database.getReference().child("BrandProfiles/");
     }
 
     @Override

@@ -32,24 +32,13 @@
         android:id="@+id/UserImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_above="@+id/UserName"
         android:layout_marginBottom="13dp"
-        android:layout_toEndOf="@+id/textView15"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="10dp"
         android:padding="20dp"
         android:src="@drawable/ic_black_profile" />
 
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"
-        android:text="User Name"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15sp"
-        android:id="@+id/UserName" />
 
     <TextView
         android:id="@+id/UserLocation"
@@ -62,6 +51,8 @@
         android:textColor="@color/colorPrimary"
         android:textSize="15sp"
         />
+
+
 
     <ImageView
         android:id="@+id/FollowingView"
@@ -102,14 +93,17 @@
         android:textColor="@color/colorPrimary"
         android:textSize="14sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:orientation="vertical"
+        android:layout_marginTop="230dp">
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/view"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
         android:text="Info"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
@@ -124,72 +118,131 @@ android:background="@color/colorPrimaryDark"
         android:layout_below="@+id/textView9"
         android:layout_marginTop="5dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_marginTop="10dp">
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/surfaceView"
-        android:layout_marginTop="19dp"
         android:textStyle="bold"
         android:textSize="20sp"
         android:textColor="@color/colorPrimaryDark"
         android:text="Email: " />
 
+
+
     <TextView
         android:id="@+id/UserEmail"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView12"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/textView10"
-        android:text="TextView"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:text=""/>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView10"
-        android:layout_marginTop="19dp"
         android:textStyle="bold"
         android:textSize="20sp"
         android:textColor="@color/colorPrimaryDark"
         android:text="Age: " />
 
-    <TextView
-        android:id="@+id/UserAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView12"
-        android:layout_alignBottom="@+id/textView12"
-        android:layout_toEndOf="@+id/textView10"
-        android:text="TextView"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/UserJob"
-        android:layout_width="wrap_content"
+            <TextView
+        android:id="@+id/UserAge"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView15"
-        android:layout_alignBottom="@+id/textView15"
-        android:layout_alignStart="@+id/UserName"
+        android:text=""
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
+
+
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profession: "
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+        android:id="@+id/UserJob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
-        android:text="TextView" />
+        android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="25dp">
+
+            <Button
+                android:id="@+id/editProfileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:text="Edit Profile"
+                android:padding="10dp"
+                android:layout_marginEnd="80dp"
+                />
+
+            <Button
+                android:id="@+id/signOutBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:text="Sign Out"
+                android:padding="10dp"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/UserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView12"
-        android:layout_marginTop="21dp"
-        android:text="Profession: "
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        android:layout_alignBaseline="@+id/UserFollowing"
+        android:layout_alignBottom="@+id/UserFollowing"
+        android:layout_centerHorizontal="true"
+        android:text="User Name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

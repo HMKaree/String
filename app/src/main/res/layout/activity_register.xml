@@ -1,57 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.android.string.RegisterActivity"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical"
-    android:padding="20dp">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.example.android.string.LogInActivity"
+android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="15dp">
+
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@mipmap/ic_launcher_round"
+        android:layout_marginBottom="5dp"/>
 
 
     <EditText
         android:id="@+id/EmailEditor"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-android:layout_marginTop="150dp"
-        android:layout_marginBottom="10dp"
-        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="10dp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_purple_profile"
         android:ems="10"
+        android:layout_marginTop="10dp"
         android:hint="Email"
+        android:textColorHint="@color/colorPrimary"
         android:inputType="textEmailAddress"
-        android:text="@string/untitled" />
-
+        android:text=""
+        android:textColor="@color/colorPrimary"/>
     <EditText
         android:id="@+id/PasswordEditor"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginBottom="20dp"
-        android:drawableStart="@drawable/ic_password"
+        android:drawablePadding="20dp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_purple_profile"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Password"
+        android:textColorHint="@color/colorPrimary"
         android:inputType="textPassword"
-        android:text="@string/untitled" />
+        android:text=""
+        />
 
 
-    <!--<ProgressBar
-        android:id="@+id/progressBar2"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="567dp"
-        android:layout_marginEnd="360dp"
-        android:layout_marginStart="360dp"
-        android:layout_marginTop="567dp"
-        android:visibility="gone" />-->
 
     <Button
         android:id="@+id/RegisterBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/button_style"
-        android:text="Next" />
+        android:text="Next"
+        android:textColor="@color/colorPrimary"
 
+        />
+
+    <TextView
+        android:id="@+id/LoginLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Already Registered? Login"
+
+        />
 </LinearLayout>
+
+
+
+
+
+
+
 

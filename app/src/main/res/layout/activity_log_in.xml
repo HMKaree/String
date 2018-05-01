@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="30dp"
+        android:padding="20dp"
         android:background="@color/colorPrimaryDark">
 
         <TextView
@@ -48,6 +48,7 @@ and also contribute to building your favourite brands"
                 android:text="Learn More"/>
 
             <Button
+                android:id="@+id/UserGuide"
                 android:layout_margin="10dp"
                 android:textColor="@color/colorPrimary"
                 android:background="@drawable/button_style2"
@@ -106,15 +107,27 @@ and also contribute to building your favourite brands"
         android:background="@drawable/button_style"
         android:text="@string/login_label"
         android:textColor="@color/colorPrimary"
-        android:drawableEnd="@drawable/ic_send"/>
+       />
+
+        <TextView
+            android:id="@+id/forgotPasswordLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Forgot Password?"
+            android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:padding="5dp"/>
 
     <TextView
         android:id="@+id/RegisterLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-      android:layout_marginTop="10dp"
+      android:layout_margin="5dp"
         android:text="@string/register_text"
-        tools:text="Register Here" />
+        tools:text="Register Here"
+        android:padding="5dp"/>
 
 
     <ProgressBar

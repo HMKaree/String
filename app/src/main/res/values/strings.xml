@@ -35,7 +35,13 @@
     <string name="camera_btn_txt">Take Photo</string>
 -->
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- strings related to clarifai -->
+
+    <string name="clarifai_api_key">e0097554ff594e87a981a7db0c7d9d9a</string>
+    <string name="error_external_storage_permission_not_granted">You must accept this permission so we can upload your images!</string>
+    <string name="error_while_contacting_api">Error while contacting Clarifai API</string>
+    <string name="no_results_from_api">API did not return any results</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_welcome_page">Welcome</string>
     <string name="action_sign_in">Sign in or register</string>
