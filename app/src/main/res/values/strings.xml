@@ -4,8 +4,8 @@
     <string name="sign_up">Sign Up</string>
     <string name="log_in">Log In</string>
     <string name="title_activity_log_in">Log In</string>
-
-    <!-- Strings related to login -->
+<string name="drawer_open"> Drawer Open</string>
+    <string name="drawer_close"> Drawer Close</string> <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="register_text">Register Here</string>
@@ -46,6 +46,7 @@
     <string name="title_activity_welcome_page">Welcome</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_search2">SearchActivity2</string>
 
 </resources>
 

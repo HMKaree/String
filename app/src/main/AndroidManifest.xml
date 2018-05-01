@@ -48,7 +48,11 @@
         <activity android:name=".ContactUs" />
         <activity android:name=".BrandProfileActivity" />
         <activity android:name=".ForgotPassword" />
-        <activity android:name=".CameraActivity"></activity>
+        <activity android:name=".CameraActivity" />
+        <activity
+            android:name=".SearchActivity2"
+            android:label="@string/title_activity_search2"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

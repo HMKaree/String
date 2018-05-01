@@ -31,10 +31,12 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.net.URI;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int CHOOSE_IMAGE = 101;
-    private ImageView UserImage;
+    private CircleImageView UserImage;
     private EditText UserNameField, UserAgeField, UserJobField, UserLocationField;
     private Button SaveProfileBtn;
     private Uri uri = null;

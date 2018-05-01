@@ -30,6 +30,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:11.0.4'
 
     compile "com.clarifai.clarifai-api2:core:2.2.12"
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     // For logging our HTTP outbound + inbound data
     compile "com.jakewharton.timber:timber:4.3.0"
@@ -45,6 +47,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
 
 
 

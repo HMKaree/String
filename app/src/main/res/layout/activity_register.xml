@@ -12,11 +12,60 @@ android:orientation="vertical"
     android:padding="15dp">
 
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:src="@mipmap/ic_launcher_round"
-        android:layout_marginBottom="5dp"/>
+
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textColor="@color/colorPrimaryDark"
+
+            android:text="Welcome to String"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="String is your companion that helps you buy good products
+and also contribute to building your favourite brands"
+            android:textSize="15sp"
+            android:layout_marginTop="15dp"/>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center" >
+
+            <Button
+                android:id="@+id/LearnMoreBtn"
+                android:layout_margin="10dp"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Learn More"/>
+
+            <Button
+                android:id="@+id/UserGuide"
+                android:layout_margin="10dp"
+                android:textColor="@color/colorPrimary"
+                android:background="@drawable/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Guide"/>
+        </LinearLayout>
+    </LinearLayout>
 
 
     <EditText
@@ -37,11 +86,25 @@ android:orientation="vertical"
         android:drawablePadding="20dp"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_purple_profile"
+        android:drawableStart="@drawable/ic_password"
         android:textColor="@color/colorPrimary"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="Password"
+        android:textColorHint="@color/colorPrimary"
+        android:inputType="textPassword"
+        android:text=""
+        />
+    <EditText
+        android:id="@+id/ConfirmPasswordEditor"
+        android:drawablePadding="20dp"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_password"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="Confirm Password"
         android:textColorHint="@color/colorPrimary"
         android:inputType="textPassword"
         android:text=""

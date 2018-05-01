@@ -9,16 +9,24 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,22 +37,15 @@ import clarifai2.dto.input.ClarifaiInput;
 import clarifai2.dto.model.output.ClarifaiOutput;
 import clarifai2.dto.prediction.Concept;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements  View.OnClickListener {
 
+    ImageView camera;
+    ImageView feed;
+    ImageView saved;
+    ImageView search;
+    ImageView more;
 
-    ImageView cameraMenu;
-    ImageView feedMenu;
-    ImageView savedMenu;
-    ImageView searchMenu;
-    ImageView moreMenu;
-
-    //public static final int PICK_IMAGE = 100;
-
-
-    Dialog logoDialog;
-
-
-
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -52,27 +53,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cameraMenu = findViewById(R.id.navigation_camera);
-        cameraMenu.setOnClickListener(this);
+        mAuth = FirebaseAuth.getInstance();
 
-        feedMenu = findViewById(R.id.navigation_feed);
-        feedMenu.setOnClickListener(this);
+        camera = findViewById(R.id.navigation_camera);
+        feed = findViewById(R.id.navigation_feed);
+        saved = findViewById(R.id.navigation_saved);
+        search = findViewById(R.id.navigation_search);
+        more = findViewById(R.id.navigation_more);
 
-        savedMenu = findViewById(R.id.navigation_saved);
-        savedMenu.setOnClickListener(this);
+        camera.setOnClickListener(this);
+        feed.setOnClickListener(this);
+        saved.setOnClickListener(this);
+        search.setOnClickListener(this);
+        more.setOnClickListener(this);
+    }
 
-        searchMenu = findViewById(R.id.navigation_search);
-        searchMenu.setOnClickListener(this);
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+            sendUserToLoginActivity();
+        }
+    }
 
-        moreMenu = findViewById(R.id.navigation_more);
-        moreMenu.setOnClickListener(this);
-
+    private void sendUserToLoginActivity() {
+        Intent loginIntent = new Intent(MainActivity.this, LogInActivity.class );
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+
+        switch (v.getId())
+
+        {
             case R.id.navigation_camera:
                 Intent camera = new Intent(this, CameraActivity.class);
                 startActivity(camera);
@@ -96,18 +114,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
 
-            case R.id.navigation_profile:
+           /* case R.id.navigation_profile:
                 Intent profileActivity = new Intent(this, ProfileActivity.class);
                 startActivity(profileActivity);
-                break;
+                break;*/
 
             case R.id.navigation_more:
                 Intent moreActivity = new Intent(this, MoreActivity.class);
                 startActivity(moreActivity);
                 break;
         }
-
     }
+
+
+
+}
 
 
    /* public void pickImage() {
@@ -147,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         logoDialog.show();
 
     }*/
-}
+
 
 
 

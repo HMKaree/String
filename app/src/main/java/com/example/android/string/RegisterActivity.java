@@ -1,5 +1,6 @@
 package com.example.android.string;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -28,18 +29,23 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity {
 
 
-    EditText EmailEditor;
-    EditText PasswordEditor;
-    Button RegisterBtn;
-    TextView LoginLink;
+    private EditText EmailEditor;
+    private EditText PasswordEditor, ConfirmPasswordEditor;
+    private Button RegisterBtn;
+    private TextView LoginLink;
+    private Button LearnMoreBtn, UserGuide;
+    private ProgressDialog loadingBar;
 
-    FirebaseAuth mAuth;
+
+
+
+    private FirebaseAuth mAuth;
     FirebaseDatabase mdatabase;
     DatabaseReference StringDatabase;
-    ProgressBar progressBar2;
+
 
 
     @Override
@@ -47,24 +53,51 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        EmailEditor = findViewById(R.id.EmailEditor);
-        PasswordEditor = findViewById(R.id.PasswordEditor);
-
-        LoginLink = findViewById(R.id.LoginLink);
-        RegisterBtn = findViewById(R.id.RegisterBtn);
-        progressBar2 = findViewById(R.id.progressBar2);
-
-
-
-        RegisterBtn.setOnClickListener(this);
-        LoginLink.setOnClickListener(this);
-
-
-
         //Firebase database access
         mAuth = FirebaseAuth.getInstance();
         mdatabase = FirebaseDatabase.getInstance();
         StringDatabase = mdatabase.getReference().child("UserProfiles");
+
+        LearnMoreBtn = findViewById(R.id.LearnMoreBtn);
+        UserGuide = findViewById(R.id.UserGuide);
+
+        EmailEditor = findViewById(R.id.EmailEditor);
+        PasswordEditor = findViewById(R.id.PasswordEditor);
+        ConfirmPasswordEditor = findViewById(R.id.ConfirmPasswordEditor);
+
+        LoginLink = findViewById(R.id.LoginLink);
+        RegisterBtn = findViewById(R.id.RegisterBtn);
+        loadingBar = new ProgressDialog(this);
+
+
+        LearnMoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LearnMore.class));
+            }
+        });
+        UserGuide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, UserGuide.class));
+            }
+        });
+        RegisterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegisterUser();
+            }
+        });
+        LoginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
+            }
+        });
+
+
+
+
 
 
     }
@@ -76,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void RegisterUser() {
         final String email = EmailEditor.getText().toString().trim();
         final String password = PasswordEditor.getText().toString().trim();
-
+        final String confirmPassword = ConfirmPasswordEditor.getText().toString().trim();
 
         if (email.isEmpty()) {
             EmailEditor.setError("Email is required");
@@ -102,21 +135,43 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
+        if (!password.equals(confirmPassword)){
+            ConfirmPasswordEditor.setError("Passwords do not match");
+            ConfirmPasswordEditor.requestFocus();
+            return;
+        }
+
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+
+            loadingBar.setTitle("Creating New Account");
+            loadingBar.setMessage("Please wait while your account is being created");
+            loadingBar.show();
+            loadingBar.setCanceledOnTouchOutside(true);
+
             mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                final String user_id = mAuth.getCurrentUser().getUid();
-                                DatabaseReference current_user_db = StringDatabase.child(user_id);
 
-                                current_user_db.child("UserEmail").setValue(email);
+                                SendUserToSetup();
 
-                                Intent loginIntent = new Intent(RegisterActivity.this, UserProfileActivity.class);
-                                loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(loginIntent);
+                                Toast.makeText(RegisterActivity.this, "You have been authenticated", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+
+                                //final String user_id = mAuth.getCurrentUser().getUid();
+                                //DatabaseReference current_user_db = StringDatabase.child(user_id);
+
+                                //current_user_db.child("UserEmail").setValue(email);
+
+
+
+                            }
+                            else{
+                                String message = task.getException().getMessage();
+                                Toast.makeText(RegisterActivity.this, "Error Occured: " + message, Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
 
                             }
                         }
@@ -125,32 +180,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.RegisterBtn:
-                RegisterUser();
-                break;
-
-            case R.id.LoginLink:
-                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
-                break;
-
-        }
-
+    private void SendUserToSetup(){
+        Intent loginIntent = new Intent(RegisterActivity.this, UserProfileActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
     }
+
+
+
+
+
+
 }
 
 

@@ -30,15 +30,15 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
      private EditText EmailEditor;
      private EditText PasswordEditor;
      private TextView RegisterLink, forgotPasswordLink; //VerifyTextView;
-     private Button LoginBtn;
-     private FirebaseAuth mAuth;
-     private FirebaseUser user_id;
-     private FirebaseDatabase mdatabase;
-     private DatabaseReference StringDatabase;
-     FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth mAuth;
+    private Button LoginBtn;
+     //private FirebaseUser user_id;
+     //private FirebaseDatabase mdatabase;
+    // private DatabaseReference StringDatabase;
+     //FirebaseAuth.AuthStateListener mAuthListener;
      //FirebaseUser user = mAuth.getInstance().getCurrentUser();
      //ProgressBar progressBar2;
-     private Button LearnMoreBtn, UserGuide;
+
 
 
     @Override
@@ -47,30 +47,27 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_log_in);
 
 
+        EmailEditor = findViewById(R.id.EmailEditor);
+        PasswordEditor = findViewById(R.id.PasswordEditor);
 
-        EmailEditor =  findViewById(R.id.EmailEditor);
-        PasswordEditor =  findViewById(R.id.PasswordEditor);
-
-        RegisterLink =  findViewById(R.id.RegisterLink);
+        RegisterLink = findViewById(R.id.RegisterLink);
         forgotPasswordLink = findViewById(R.id.forgotPasswordLink);
-        LoginBtn =  findViewById(R.id.LoginBtn);
+        LoginBtn = findViewById(R.id.LoginBtn);
         //progressBar2 =  findViewById(R.id.progressBar2);
         //VerifyTextView =  findViewById(R.id.VerifyTextView);
-        LearnMoreBtn = findViewById(R.id.LearnMoreBtn);
-        UserGuide = findViewById(R.id.UserGuide);
 
 
         RegisterLink.setOnClickListener(this);
         forgotPasswordLink.setOnClickListener(this);
         LoginBtn.setOnClickListener(this);
-        LearnMoreBtn.setOnClickListener(this);
-        UserGuide.setOnClickListener(this);
-
-        mdatabase = FirebaseDatabase.getInstance();
-        StringDatabase = mdatabase.getReference().child("UserProfiles");
+    }
 
 
-       mAuth = FirebaseAuth.getInstance();
+        //mdatabase = FirebaseDatabase.getInstance();
+        //StringDatabase = mdatabase.getReference().child("UserProfiles");
+
+
+       /*mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -88,14 +85,14 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             }
         };
 
-    }
+    }*/
 
-   @Override
+  /* @Override
     protected void onStart() {
         super.onStart();
 
         mAuth.addAuthStateListener(mAuthListener);
-    }
+    }*/
 
     private void UserLogin() {
         String email = EmailEditor.getText().toString().trim();
@@ -126,7 +123,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-        //progressBar2.setVisibility(View.VISIBLE);
+     /*   //progressBar2.setVisibility(View.VISIBLE);
         if ( email != null && password != null) {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -140,7 +137,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                     });
-        }
+        }*/
     }
 
     /*public void checkUserExists(){
@@ -183,7 +180,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.RegisterLink:
-                startActivity(new Intent(this, RegisterActivity.class));
+                sendUserToRegister();
                 break;
 
             case R.id.forgotPasswordLink:
@@ -195,16 +192,16 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                 //startActivity(new Intent(this, MainActivity.class));
                 break;
 
-            case R.id.LearnMoreBtn:
-                startActivity(new Intent(this, LearnMore.class));
-                break;
 
-            case R.id.UserGuide:
-                startActivity(new Intent(this, UserGuide.class));
-                break;
 
         }
 
+
+    }
+
+    private void sendUserToRegister() {
+        Intent registerIntent = new Intent(this, RegisterActivity.class);
+        startActivity(registerIntent);
 
     }
 }
