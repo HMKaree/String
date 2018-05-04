@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,8 +30,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     FirebaseDatabase database;
     DatabaseReference UserProfileDatabase;
     FirebaseAuth mAuth;
-    ValueEventListener UserProfileListener;
+
     Button editProfileBtn, signOutBtn;
+    private String currentUserId;
 
 
     @Override
@@ -38,7 +40,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-
+        mAuth = FirebaseAuth.getInstance();
+        currentUserId = mAuth.getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance();
+        UserProfileDatabase = database.getReference().child("UserProfiles").child(currentUserId);
 
         UserFollowing = findViewById(R.id.UserFollowing);
         UserSaved = findViewById(R.id.UserSaved);
@@ -52,27 +57,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         signOutBtn = findViewById(R.id.signOutBtn);
         signOutBtn.setOnClickListener(this);
 
-        database = FirebaseDatabase.getInstance();
-        UserProfileDatabase = database.getReference().child("UserProfiles");
 
-        //addUserChangeListener();
-        //getUserDetailListener();
-        mAuth = FirebaseAuth.getInstance();
+
+
+
 
         UserProfileDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists()){
 
-                for (DataSnapshot UserProfileSnapshot : dataSnapshot.getChildren()) {
-                    UserModel userModel = UserProfileSnapshot.getValue(UserModel.class);
-                    UserImage.setImageURI(Uri.parse(userModel.getUserImage().toString()));
-                    UserName.setText(userModel.getUserName());
-                    UserJob.setText(userModel.getUserJob());
-                    UserAge.setText(userModel.getUserAge());
-                    UserEmail.setText(userModel.getUserEmail());
-                    UserSaved.setText(userModel.getUserSaved());
-                    UserFollowing.setText(userModel.getUserFollowing());
+                    String profileImage = dataSnapshot.child("UserImage").getValue().toString();
+                    String profileName = dataSnapshot.child("UserName").getValue().toString();
+                    String profileAge = dataSnapshot.child("UserAge").getValue().toString();
+                    String profileJob = dataSnapshot.child("UserJob").getValue().toString();
+                    String profileLocation = dataSnapshot.child("UserLocation").getValue().toString();
+
+                    Picasso.with(ProfileActivity.this).load(profileImage).placeholder(R.drawable.ic_black_profile)
+                            .into(UserImage);
+
+                    UserName.setText(profileName);
+                    UserAge.setText(profileAge);
+                    UserJob.setText(profileJob);
+                    UserLocation.setText(profileLocation);
+
                 }
+
+
 
             }
 

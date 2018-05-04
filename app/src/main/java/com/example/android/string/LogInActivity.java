@@ -1,5 +1,6 @@
 package com.example.android.string;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -29,15 +30,11 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
 
      private EditText EmailEditor;
      private EditText PasswordEditor;
-     private TextView RegisterLink, forgotPasswordLink; //VerifyTextView;
+     private TextView RegisterLink, forgotPasswordLink;
     private FirebaseAuth mAuth;
     private Button LoginBtn;
-     //private FirebaseUser user_id;
-     //private FirebaseDatabase mdatabase;
-    // private DatabaseReference StringDatabase;
-     //FirebaseAuth.AuthStateListener mAuthListener;
-     //FirebaseUser user = mAuth.getInstance().getCurrentUser();
-     //ProgressBar progressBar2;
+    private ProgressDialog loadingBar;
+
 
 
 
@@ -46,6 +43,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        mAuth = FirebaseAuth.getInstance();
+
 
         EmailEditor = findViewById(R.id.EmailEditor);
         PasswordEditor = findViewById(R.id.PasswordEditor);
@@ -53,8 +52,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         RegisterLink = findViewById(R.id.RegisterLink);
         forgotPasswordLink = findViewById(R.id.forgotPasswordLink);
         LoginBtn = findViewById(R.id.LoginBtn);
-        //progressBar2 =  findViewById(R.id.progressBar2);
-        //VerifyTextView =  findViewById(R.id.VerifyTextView);
+        loadingBar = new ProgressDialog(this);
 
 
         RegisterLink.setOnClickListener(this);
@@ -62,37 +60,31 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         LoginBtn.setOnClickListener(this);
     }
 
-
-        //mdatabase = FirebaseDatabase.getInstance();
-        //StringDatabase = mdatabase.getReference().child("UserProfiles");
-
-
-       /*mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-              if (firebaseAuth.getCurrentUser() == null){
-                  Intent loginIntent = new Intent(LogInActivity.this, RegisterActivity.class);
-                  loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                  startActivity(loginIntent);
-                  finish();
-              }
-
-                if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(LogInActivity.this, MainActivity.class));
-                    finish();
-                }
-            }
-        };
-
-    }*/
-
-  /* @Override
+   @Override
     protected void onStart() {
+
         super.onStart();
 
-        mAuth.addAuthStateListener(mAuthListener);
-    }*/
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if(currentUser != null){
+
+                startActivity(new Intent(LogInActivity.this, MainActivity.class));
+
+                //SendUserToMainActivity();
+            }
+
+
+    }
+
+    private void SendUserToMainActivity() {
+
+        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
 
     private void UserLogin() {
         String email = EmailEditor.getText().toString().trim();
@@ -123,57 +115,37 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-     /*   //progressBar2.setVisibility(View.VISIBLE);
+
         if ( email != null && password != null) {
+
+            loadingBar.setTitle("Logging");
+            loadingBar.setMessage("Please wait while your are getting logged in");
+            loadingBar.show();
+            loadingBar.setCanceledOnTouchOutside(true);
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
+
+                               SendUserToMainActivity();
+
+                                Toast.makeText(LogInActivity.this, "You are logged in successfully", Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
+
+                            }
+
+                            else{
+                                String message = task.getException().getMessage();
+                                Toast.makeText(LogInActivity.this, "Error Occure: " + message,Toast.LENGTH_SHORT).show();
+                                loadingBar.dismiss();
 
                             }
                         }
                     });
-        }*/
+        }
     }
-
-    /*public void checkUserExists(){
-
-        final FirebaseUser user_id = mAuth.getCurrentUser();
-        StringDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(user_id)) {
-
-
-                    Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-
-                    //finish();
-
-                } else {
-
-                    Toast.makeText(getApplicationContext(), "Some error occurred", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
-
-
-
-
-
-
 
 
     @Override

@@ -45,13 +45,10 @@ public class CameraActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     CameraAdapter adapter;
-    RecyclerView cameraRecyclerView;
+    //RecyclerView cameraRecyclerView;
     //ImageView BrandLogo;
-    //TextView BrandName;
-    //Button UserSaved;
-    //private List<Concept> concepts;
-    //private List<Brand> Brands;
-    //private ImageView UserImage;
+    TextView BrandName;
+
     @Nullable
     private ClarifaiClient client;
 
@@ -87,12 +84,8 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         //BrandLogo =findViewById(R.id.BrandLogo);
-        //BrandName = findViewById(R.id.BrandName);
-        //UserSaved =findViewById(R.id.UserSaved);
-        cameraRecyclerView = findViewById(R.id.cameraRecyclerview);
-        cameraRecyclerView.setHasFixedSize(true);
-        cameraRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CameraAdapter();
+        BrandName = findViewById(R.id.BrandName);
+
         //concepts = new ArrayList<>();
         //Brands = new ArrayList<>();
 

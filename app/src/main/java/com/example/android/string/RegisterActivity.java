@@ -102,6 +102,28 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+   /* @Override
+    protected void onStart() {
+
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null){
+
+            SendUserToMainActivity();
+        }
+
+
+    }*/
+
+    private void SendUserToMainActivity() {
+
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 
 
 
@@ -159,11 +181,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 Toast.makeText(RegisterActivity.this, "You have been authenticated", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
-
-                                //final String user_id = mAuth.getCurrentUser().getUid();
-                                //DatabaseReference current_user_db = StringDatabase.child(user_id);
-
-                                //current_user_db.child("UserEmail").setValue(email);
 
 
 
