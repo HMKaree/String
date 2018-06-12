@@ -23,16 +23,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageView UserImage;
-    TextView UserFollowing, UserSaved, UserName, UserLocation, UserEmail, UserAge, UserJob;
+    CircleImageView UserImage;
+    TextView UserFollowing, UserSaved, UserName, UserLocation, UserAge, UserJob;
     FirebaseDatabase database;
-    DatabaseReference UserProfileDatabase;
+    DatabaseReference UserProfileDatabase, savedBrands;
     FirebaseAuth mAuth;
 
     Button editProfileBtn, signOutBtn;
     private String currentUserId;
+    //String brandId;
+    int countSaves;
 
 
     @Override
@@ -40,19 +44,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //brandId = database.getReference().child("BrandProfiles").getKey();
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         database = FirebaseDatabase.getInstance();
-        UserProfileDatabase = database.getReference().child("UserProfiles").child(currentUserId);
+        UserProfileDatabase = database.getReference().child("Users").child(currentUserId).child("Profile");
+        savedBrands = database.getReference().child("savedBrands").child(currentUserId).child("savedBrands");
 
         UserFollowing = findViewById(R.id.UserFollowing);
         UserSaved = findViewById(R.id.UserSaved);
         UserName = findViewById(R.id.UserName);
         UserLocation = findViewById(R.id.UserLocation);
-        UserEmail = findViewById(R.id.UserEmail);
+
         UserAge = findViewById(R.id.UserAge);
         UserJob = findViewById(R.id.UserJob);
         UserImage = findViewById(R.id.UserImage);
+        editProfileBtn = findViewById(R.id.editProfileBtn);
+        editProfileBtn.setOnClickListener(this);
 
         signOutBtn = findViewById(R.id.signOutBtn);
         signOutBtn.setOnClickListener(this);
@@ -66,27 +74,45 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                if(dataSnapshot.exists()){
-
+                if(dataSnapshot.hasChild("UserImage")) {
                     String profileImage = dataSnapshot.child("UserImage").getValue().toString();
-                    String profileName = dataSnapshot.child("UserName").getValue().toString();
-                    String profileAge = dataSnapshot.child("UserAge").getValue().toString();
-                    String profileJob = dataSnapshot.child("UserJob").getValue().toString();
-                    String profileLocation = dataSnapshot.child("UserLocation").getValue().toString();
 
                     Picasso.with(ProfileActivity.this).load(profileImage).placeholder(R.drawable.ic_black_profile)
                             .into(UserImage);
+                }
+                if(dataSnapshot.hasChild("UserName")) {
+                    String profileName = dataSnapshot.child("UserName").getValue().toString();
 
                     UserName.setText(profileName);
+                }
+                if(dataSnapshot.hasChild("UserAge")) {
+                    String profileAge = dataSnapshot.child("UserAge").getValue().toString();
+
                     UserAge.setText(profileAge);
+                }
+                if(dataSnapshot.hasChild("UserJob")) {
+                    String profileJob = dataSnapshot.child("UserJob").getValue().toString();
+
                     UserJob.setText(profileJob);
+                }
+                if(dataSnapshot.hasChild("UserLocation")) {
+                    String profileLocation = dataSnapshot.child("UserLocation").getValue().toString();
+
                     UserLocation.setText(profileLocation);
+                }
+                    //String profileEmail = dataSnapshot.child("identifier").getValue().toString();
+                    //String brandFollows = dataSnapshot.child("UserFollowing").getValue().toString();
+                    //String brandSaved = dataSnapshot.child("UserSaved").getValue().toString();
+
+
+
+                    //UserEmail.setText(profileEmail);
+
+
+
+
 
                 }
-
-
-
-            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -94,67 +120,36 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        noOfSavedBrands();
+        //noOfFollowedBrands();
 
 
-    /*ValueEventListener(new ValueEventListener) {
-        @Override
-        public void onDataChange (DataSnapshot dataSnapshot){
+}
+    private void noOfSavedBrands() {
+        savedBrands.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-            for (DataSnapshot userModelSnapshot : dataSnapshot.getChildren()) {
-
-                UserModel userModel = userModelSnapshot.getValue(UserModel.class);
-                if (userModel != null) {
-                    UserName.getText().toString();
-                    UserName.setText(userModel.getUserName());
-                    UserLocation.setText(userModel.getUserLocation());
-                    UserAge.setText(userModel.getUserAge());
-                    UserEmail.setText(userModel.getUserEmail());
-                    UserJob.setText(userModel.getUserJob());
-                    UserFollowing.setText(userModel.getUserFollowing());
-                    UserSaved.setText(userModel.getUserSaved());
+                    countSaves = (int) dataSnapshot.getChildrenCount();
+                    UserSaved.setText(Integer.toString(countSaves));
                 }
-            }
 
 
             @Override
-            public void onCancelled (DatabaseError databaseError){
-                Toast.makeText(getApplicationContext(), "loading failed", Toast.LENGTH_SHORT)
-                        .show();
+            public void onCancelled(DatabaseError databaseError) {
+
             }
-        }
-    }*/
+        });
+    }
 
-
-
-
-
-
-
-
-
-       /* ViewSwitcher switcher = findViewById(R.id.ageSwitcher);
-        switcher.showNext();
-        TextView UserAge = switcher.findViewById(R.id.UserAge);
-        UserAge.setText(UserAge.getText().toString().trim());*/
-
-
-      /* private void updateUserProfile(){
-            userModel.setUserName("value");
-        userModel.setUserLocation("Value");
-        userModel.setUserJob("value");
-        userModel.setUserAge("value");*/
-
-      /*  UserProfiles.push().setValue(userModel);
-        Toast.makeText(getApplicationContext(),"Your Profile has been updated", Toast.LENGTH_SHORT).show();*/
-
-}
+    private void noOfFollowedBrands() {
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.editProfileBtn:
-                //toggleButton();
-                //updateUserProfile();
+                startActivity(new Intent(ProfileActivity.this, UserProfileActivity.class));
                 break;
 
             case R.id.signOutBtn:

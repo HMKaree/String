@@ -1,7 +1,9 @@
 package com.example.android.string;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,10 +47,19 @@ public class CameraActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    CameraAdapter adapter;
+    Dialog logoDialog;
+    TextView closePopUp;
+    TextView BrandFollowing;
+    TextView BrandSaves;
+    Button UserSaved;
+    TextView BrandName;
+    TextView BrandCategory;
+    ImageView BrandLogo;
+
+    //CameraAdapter adapter;
     //RecyclerView cameraRecyclerView;
     //ImageView BrandLogo;
-    TextView BrandName;
+    //TextView BrandName;
 
     @Nullable
     private ClarifaiClient client;
@@ -84,7 +96,7 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         //BrandLogo =findViewById(R.id.BrandLogo);
-        BrandName = findViewById(R.id.BrandName);
+        //BrandName = findViewById(R.id.BrandName);
 
         //concepts = new ArrayList<>();
         //Brands = new ArrayList<>();
@@ -105,13 +117,13 @@ public class CameraActivity extends AppCompatActivity {
             if (resultCode != RESULT_OK) {
                 return;
             }
-            switch (requestCode) {
-                case REQUEST_IMAGE_CAPTURE:
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null)
+            {
                     final byte[] imageBytes = ClarifaiUtil.retrieveSelectedImage(this, data);
                     if (imageBytes != null) {
                         onImagePicked(imageBytes);
                     }
-                    break;
+
             }
         }
 
@@ -162,8 +174,8 @@ public class CameraActivity extends AppCompatActivity {
                     return;
                 }
 
-
-                adapter.setData(predictions.get(0).data());
+                LogoPopUp();
+                //adapter.setData(predictions.get(0).data());
                 //adapter.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length));
             }
 
@@ -182,6 +194,42 @@ public class CameraActivity extends AppCompatActivity {
         return client;
     }
 
+
+    public void LogoPopUp(){
+
+
+        logoDialog = new Dialog(CameraActivity.this);
+        logoDialog.setContentView(R.layout.logo_pop_up);
+        logoDialog.setTitle("String");
+
+        closePopUp = logoDialog.findViewById(R.id.closePopUp);
+        BrandFollowing = logoDialog.findViewById(R.id.BrandFollowing);
+        BrandSaves = logoDialog.findViewById(R.id.BrandSaves);
+        UserSaved = logoDialog.findViewById(R.id.UserSaved);
+        BrandLogo = logoDialog.findViewById(R.id.BrandLogo);
+        BrandName = logoDialog.findViewById(R.id.BrandName);
+        BrandCategory = logoDialog.findViewById(R.id.BrandCategory);
+
+        UserSaved.setEnabled(true);
+        closePopUp.setEnabled(true);
+
+        UserSaved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        closePopUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             logoDialog.cancel();
+            }
+        });
+        //logoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(color.TRANSPARENT));
+        logoDialog.show();
+
+    }
 
 
 

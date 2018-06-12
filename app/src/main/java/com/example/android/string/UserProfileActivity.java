@@ -32,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 
 import java.io.IOException;
@@ -40,77 +42,108 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private static final int CHOOSE_IMAGE = 101;
-    private CircleImageView UserImage;
+public class UserProfileActivity extends AppCompatActivity
+{
     private EditText UserNameField, UserAgeField, UserJobField, UserLocationField;
-    private Button SaveProfileBtn;
-    private Uri uri = null;
+    private Button saveProfileBtn;
+   private CircleImageView userImage;
+
     private ProgressDialog loadingBar;
 
-    private FirebaseDatabase mDatabase;
+
     private DatabaseReference StringDatabase;
     private FirebaseAuth mAuth;
-    private FirebaseStorage mStorage;
+
     private StorageReference StringStorage;
 
     String currentUserId;
+    final static int Gallery_Pick = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
-        mDatabase = FirebaseDatabase.getInstance();
-        StringDatabase = mDatabase.getReference().child("UserProfiles").child(currentUserId);
-        mStorage = FirebaseStorage.getInstance();
-        StringStorage = mStorage.getReference().child("ProfileImages");
 
-        UserImage = findViewById(R.id.UserImage);
+        StringDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("Profile");
+
+        StringStorage = FirebaseStorage.getInstance().getReference().child("ProfileImages");
+
+        userImage = findViewById(R.id.UserImage);
         UserNameField = findViewById(R.id.UserNameField);
         UserAgeField = findViewById(R.id.UserAgeField);
         UserJobField = findViewById(R.id.UserJobField);
         UserLocationField = findViewById(R.id.UserLocationField);
 
-        //progressbar = findViewById(R.id.progressbar);
-        SaveProfileBtn = findViewById(R.id.SaveProfileBtn);
+        loadingBar = new ProgressDialog(this);
+        saveProfileBtn = findViewById(R.id.SaveProfileBtn);
 
-        UserImage.setOnClickListener(this);
-        SaveProfileBtn.setOnClickListener(this);
+
+        saveProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUserInformation();
+            }
+        });
+
+       userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, Gallery_Pick);
+
+            }
+        });
 
     }
-
-    private void showImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Profile Image"), CHOOSE_IMAGE);
-
-    }
-
-
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && data != null) {
-            uri = data.getData();
-            UserImage.setImageURI(uri);
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null)
+        {
+            Uri uri = data.getData();
 
-                StorageReference filePath = StringStorage.child(currentUserId + "jpg");
-                filePath.putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .setAspectRatio(1, 1)
+                    .start(this);
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE)
+        {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+
+            if (resultCode == RESULT_OK)
+            {
+
+                loadingBar.setTitle("Profile Image");
+                loadingBar.setMessage("Please wait while your profile is updated");
+                loadingBar.show();
+                loadingBar.setCanceledOnTouchOutside(true);
+
+                Uri resultUri = result.getUri();
+
+                StorageReference filePath = StringStorage.child(currentUserId + ".jpg");
+                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
-                            Toast.makeText(UserProfileActivity.this, "Profile image stored successfully", Toast .LENGTH_SHORT).show();
-                            final String downloadUrl = task.getResult().getDownloadUrl().toString();
+                            Toast.makeText(UserProfileActivity.this, "Profile image stored successfully", Toast.LENGTH_SHORT).show();
+
+                             final String downloadUrl = task.getResult().getDownloadUrl().toString();
 
                             StringDatabase.child("UserImage").setValue(downloadUrl)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -119,13 +152,19 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
                                             if (task.isSuccessful()) {
 
+                                                Intent setupIntent = new Intent(UserProfileActivity.this, UserProfileActivity.class);
+                                                startActivity(setupIntent);
+                                                // UserImage.setImageURI(uri);
+
                                                 Toast.makeText(UserProfileActivity.this, "Image stored", Toast.LENGTH_SHORT).show();
-                                            }
-                                            else
-                                            {
+                                                loadingBar.dismiss();
+
+                                            } else {
                                                 String message = task.getException().getMessage();
                                                 Toast.makeText(UserProfileActivity.this, "Error Occured: " + message, Toast.LENGTH_SHORT).show();
+                                                loadingBar.dismiss();
                                             }
+
                                         }
                                     });
                         }
@@ -133,8 +172,14 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 });
             }
 
-        }
+            else
+            {
+                Toast.makeText(this, "Error Occurred: Image cropping failed, Try Again", Toast.LENGTH_LONG).show();
+                loadingBar.dismiss();
+            }
 
+        }
+    }
 
 
     private void saveUserInformation() {
@@ -170,8 +215,8 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         }
 
 
-        if (!TextUtils.isEmpty(displayUserName) && !TextUtils.isEmpty(displayUserAge)
-                && !TextUtils.isEmpty(displayUserJob) && !TextUtils.isEmpty(displayUserLocation)) {
+        else
+            {
 
               loadingBar.setTitle("Loading");
             loadingBar.setMessage("Please wait while your profile is created");
@@ -188,6 +233,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
             HashMap userMap = new HashMap();
 
+                userMap.put("UserId", currentUserId);
             userMap.put("UserName", displayUserName);
             userMap.put("UserAge", displayUserAge);
             userMap.put("UserLocation", displayUserLocation);
@@ -204,7 +250,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                         SendUserToMainActivity();
                         Toast.makeText(UserProfileActivity.this, "You have been registered", Toast.LENGTH_SHORT).show();
                         loadingBar.dismiss();
-                    } else {
+                    }
+
+                    else {
                         String message = task.getException().getMessage();
                         Toast.makeText(UserProfileActivity.this, " Error Occured: "
                                 + message, Toast.LENGTH_LONG).show();
@@ -213,16 +261,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
                 }
             });
 
-
-                  /* // current_user_db.child("userImage").setValue(downloadUrl);
-
-                    Toast.makeText(getApplicationContext(),"Your Profile has been saved", Toast.LENGTH_SHORT).show();
-
-                    Intent loginIntent = new Intent(UserProfileActivity.this, LogInActivity.class);
-                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(loginIntent);
-                }
-            });*/
 
         }
     }
@@ -234,34 +272,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         finish();
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.UserImage:
-                showImageChooser();
-               /* StringDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                       if(dataSnapshot.exists()){
-                           String image = dataSnapshot.child("ProfileImages").getValue().toString();
 
-                           Picasso.with(UserProfileActivity.this).load(image).placeholder(R.drawable.ic_purple_profile).into(UserImage);
-                       }*/
-
-
-                  /*  @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
-                break;
-
-            case R.id.SaveProfileBtn:
-                saveUserInformation();
-                startActivity(new Intent(UserProfileActivity.this, LogInActivity.class));
-
-        }
-    }
 }
 
 

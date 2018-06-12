@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
         //Firebase database access
         mAuth = FirebaseAuth.getInstance();
         mdatabase = FirebaseDatabase.getInstance();
-        StringDatabase = mdatabase.getReference().child("UserProfiles");
+        StringDatabase = mdatabase.getReference().child("Users");
 
         LearnMoreBtn = findViewById(R.id.LearnMoreBtn);
         UserGuide = findViewById(R.id.UserGuide);

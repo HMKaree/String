@@ -107,7 +107,7 @@ public class SearchActivity extends AppCompatActivity {
                        @Override
                        public void onClick(View v)
                        {
-                         Intent clickPost = new Intent(SearchActivity.this,BrandProfileActivity.class);
+                         Intent clickPost = new Intent(SearchActivity.this,logoPopUpActivity.class);
                         clickPost.putExtra("postKey", postKey);
                          startActivity(clickPost);
 

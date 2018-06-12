@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppCenter.start(getApplication(), "66b038ff-c10a-4028-ace4-e8674e471e37", Analytics.class, Crashes.class);
+        //AppCenter.start(getApplication(), "66b038ff-c10a-4028-ace4-e8674e471e37", Analytics.class, Crashes.class);
 
         mAuth = FirebaseAuth.getInstance();
         userProfiles = FirebaseDatabase.getInstance().getReference().child("UserProfiles");
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         more.setOnClickListener(this);
     }
 
-    /*@Override
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         else {
             CheckIfUserExists();
         }
-    }*/
+    }
 
     private void CheckIfUserExists() {
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
                 if(!dataSnapshot.hasChild(current_user_id)){
 
-                    Intent setupActivity = new Intent(MainActivity.this, UserProfileActivity.class);
+                    Intent setupActivity = new Intent(MainActivity.this, RegisterActivity.class);
                     setupActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 }
             }
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
     private void sendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LogInActivity.class );
-       // loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
         finish();
     }
@@ -181,29 +181,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
 
 
-    /*public void LogoPopUp(View view){
-        TextView closePopUp;
-        TextView BrandFollowing;
-        TextView BrandSaves;
-        Button UserSaved;
-
-        logoDialog.setContentView(R.layout.logo_pop_up);
-        closePopUp = findViewById(R.id.closePopUp);
-        BrandFollowing = findViewById(R.id.BrandFollowing);
-        BrandSaves = findViewById(R.id.BrandSaves);
-        UserSaved = findViewById(R.id.UserSaved);
-
-        UserSaved.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void OnClick(View v){
-                logoDialog.dismiss();
-            }
-
-        });
-        logoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(color.TRANSPARENT));
-        logoDialog.show();
-
-    }*/
 
 
 
