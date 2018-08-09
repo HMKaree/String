@@ -97,9 +97,9 @@ public class SavedActivity extends AppCompatActivity {
 
                                 followChecker = true;
 
-                                followedBrands.addChildEventListener(new ChildEventListener() {
+                                followedBrands.addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (followChecker.equals(true)) {
 
                                             if (dataSnapshot.hasChild(postKey)) {
@@ -107,9 +107,9 @@ public class SavedActivity extends AppCompatActivity {
                                                 followedBrands.child(postKey).removeValue();
                                                 followChecker = false;
                                             } else {
-                                                Brands.addChildEventListener(new ChildEventListener() {
+                                                Brands.addValueEventListener(new ValueEventListener() {
                                                     @Override
-                                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
                                                         //String brandKey = dataSnapshot.getKey();
 
                                                         final String logoBrand = dataSnapshot.child(postKey).child("BrandLogo").getValue().toString();
@@ -121,130 +121,98 @@ public class SavedActivity extends AppCompatActivity {
                                                     }
 
                                                     @Override
-                                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                                                    }
-
-                                                    @Override
                                                     public void onCancelled(DatabaseError databaseError) {
 
                                                     }
+
                                                 });
+
+                                                followChecker = false;
+
                                             }
                                         }
                                     }
 
-                                    @Override
-                                    public void onChildChanged(DataSnapshot
-                                                                       dataSnapshot, String s) {
-
-                                    }
-
-                                    @Override
-                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                    }
-
-                                    @Override
-                                    public void onChildMoved(DataSnapshot
-                                                                     dataSnapshot, String s) {
-
-                                    }
 
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
 
                                     }
                                 });
-
-
-                                followChecker = false;
                             }
                         });
                     }
                 };
-
 
                             /*@Override
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
                         });*/
-                        savedRecyclerView.setAdapter(firebaseRecyclerAdapter);
+        savedRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
+    }
 
 
+    public static class savedViewHolder extends RecyclerView.ViewHolder
+
+    {
+        View mView;
+
+        ImageButton followIcon;
+        ImageButton shareIcon;
+        ImageButton deleteIcon;
+        TextView followText;
+        DatabaseReference followedBrands, Brands;
+        private FirebaseAuth mAuth;
+        private String currentUserId;
+
+        public savedViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+
+            followIcon = mView.findViewById(R.id.followIcon);
+            shareIcon = mView.findViewById(R.id.shareIcon);
+            deleteIcon = mView.findViewById(R.id.deleteIcon);
+            followText = mView.findViewById(R.id.followingText);
+
+            mAuth = FirebaseAuth.getInstance();
+            currentUserId = mAuth.getCurrentUser().getUid();
+
+            Brands = FirebaseDatabase.getInstance().getReference().child("BrandProfiles");
+            followedBrands = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("followedBrands");
+        }
+
+        public void setBrandName(String brandName) {
+            TextView BrandName = mView.findViewById(R.id.BrandName);
+            BrandName.setText(brandName);
+        }
+
+        public void setBrandLogo(Context ctx, String brandLogo) {
+            ImageView BrandLogo = mView.findViewById(R.id.BrandLogo);
+            Picasso.with(ctx).load(brandLogo).into(BrandLogo);
+        }
+
+
+        public void setFollowingText(final String postKey) {
+            followedBrands.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild(postKey)) {
+
+                        followText.setText("Following");
+                    } else {
+                        followText.setText("");
                     }
 
+                }
 
-                    public static class savedViewHolder extends RecyclerView.ViewHolder
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    {
-                        View mView;
-
-                        ImageButton followIcon;
-                        ImageButton shareIcon;
-                        ImageButton deleteIcon;
-                        TextView followText;
-                        DatabaseReference followedBrands, Brands;
-                        private FirebaseAuth mAuth;
-                        private String currentUserId;
-
-                        public savedViewHolder(View itemView) {
-                            super(itemView);
-                            mView = itemView;
-
-                            followIcon = mView.findViewById(R.id.followIcon);
-                            shareIcon = mView.findViewById(R.id.shareIcon);
-                            deleteIcon = mView.findViewById(R.id.deleteIcon);
-                            followText = mView.findViewById(R.id.followingText);
-
-                            mAuth = FirebaseAuth.getInstance();
-                            currentUserId = mAuth.getCurrentUser().getUid();
-
-                            Brands = FirebaseDatabase.getInstance().getReference().child("BrandProfiles");
-                            followedBrands = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserId).child("followedBrands");
-                        }
-
-                        public void setBrandName(String brandName) {
-                            TextView BrandName = mView.findViewById(R.id.BrandName);
-                            BrandName.setText(brandName);
-                        }
-
-                        public void setBrandLogo(Context ctx, String brandLogo) {
-                            ImageView BrandLogo = mView.findViewById(R.id.BrandLogo);
-                            Picasso.with(ctx).load(brandLogo).into(BrandLogo);
-                        }
-
-
-                        public void setFollowingText(final String postKey) {
-                            followedBrands.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.hasChild(postKey)) {
-
-                                        followText.setText("Following");
-                                    } else {
-                                        followText.setText("");
-                                    }
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
+                }
+            });
+        }
 
 
 
@@ -257,5 +225,7 @@ public class SavedActivity extends AppCompatActivity {
 
 
     }*/
-                    }
-                }
+    }
+}
+
+

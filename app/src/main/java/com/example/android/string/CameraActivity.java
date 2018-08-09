@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +52,7 @@ public class CameraActivity extends AppCompatActivity {
     TextView closePopUp;
     TextView BrandFollowing;
     TextView BrandSaves;
-    Button UserSaved;
+    LinearLayout UserSaved;
     TextView BrandName;
     TextView BrandCategory;
     ImageView BrandLogo;
